@@ -97,10 +97,9 @@ while ex==0:
                 sys.stdout.write(tet[i])
                 sys.stdout.write("\n")
 
-         elif command.strip() == ')':    #Rotate 90 deg
-            for i in range(0,len(tet)):
-                sys.stdout.write(tet[i])
-                sys.stdout.write("\n")
+        elif command.strip() == ')':
+            print("Good")
+
 
         elif command.strip() == 'q':    # Quit Command
             ex=1

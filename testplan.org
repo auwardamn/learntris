@@ -367,6 +367,7 @@ r r .
 = Z : The Z Tetramino
 : The Z Tetramino is colored red and inhabits a 3x3 matrix.
 :
+:
 : Notice that in this test, the commands are all issued on
 : a single line. This helps keep the test descriptions
 : readable, and also makes it more convienient to type the

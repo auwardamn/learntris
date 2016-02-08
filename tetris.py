@@ -56,27 +56,32 @@ def create_tet(type):
 
     elif type == 'J':    #Activate 'J' tetramino
             tet = clear_tet(3)
-            tet[2]=["b",".","."]
-            tet[2]=["b","b","b"]
+            tet[0]=["b",".","."]
+            tet[1]=["b","b","b"]
             tet[2]=[".",".","."]
 
     elif type == 'L':    #Activate 'L' tetramino
             tet = clear_tet(3)
-            tet[0]=[".","o","o"]
-            tet[2]=["o","o","o"]
+            tet[0]=[".",".","o"]
+            tet[1]=["o","o","o"]
             tet[2]=[".",".","."]
 
     elif type == 'T':    #Activate 'T' tetramino
             tet = clear_tet(3)
-            tet[0]=". m ."                #Shape tet
-            tet[1]="m m m"
-            tet[2]='. . .'
+            tet[0]=[".","m","."]
+            tet[1]=["m","m","m"]
+            tet[2]=[".",".","."]
     return tet
+
 def print_matrix(matrix):
     """prints provided matrix of seperate elements to the screen with " " seperation"""
     for i in range(0,len(matrix)): #For Each row of the matrix
         print(*matrix[i], sep=" ") #Print Each item of current row with " " seperation
-    
+
+def rotate_tet(tet):
+    """returns tet matrix rotated 90 deg CW"""
+    rotated = zip(*tet[::-1])
+    return list(rotated)
 
 # Init Variables
 width = 10
@@ -134,7 +139,10 @@ while ex==0:                #Main Loop
             print_matrix(tet)
 
         elif command.strip() == ')':
-            print("Good")
+            tet=(rotate_tet(tet))
+
+        elif command.strip() == ';':
+            print(' ')
 
         elif command.strip() == 'q':    # Quit Command
             ex=1                        # Terminate Program

@@ -81,7 +81,7 @@ def spawn(program_args, use_shell):
                             stdout=subprocess.PIPE)
 
 
-def await_results(program, timeout_seconds=2):
+def await_results(program, timeout_seconds=5):
     """
     This polls the child program until it finishes
     executing. If it takes more than =timeout_seconds=,
@@ -140,7 +140,7 @@ def run_tests(program_args, use_shell):
         print("\n") # add 2 blank lines between tests
 
 def find_learntris():
-    default = "./learntris"
+    default = "./tetris.py"
     program_args = sys.argv[1:] if len(sys.argv) >= 2 else [default]
     if "--shell" in program_args: # --shell option
         program_args.remove("--shell")

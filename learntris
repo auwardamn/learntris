@@ -20,10 +20,10 @@ for i in range(0,4):
 # Main Loop
 while ex==0:
     input = sys.stdin.readline()  # Get Command Input
-    command = []
-    command = str.split(input)
+    command_list = str.split(input)     #Split Entered Commands
+    for x in range(0,len(command_list)): # "For Each Command Entered"
+        command = command_list[x]       # Set Current Command
 
-    for x in range(0,len(command))
         if command.strip() == 'p':      # Print Current Matrix Status
             for i in range(0, height):
                sys.stdout.write(row[i])
@@ -68,7 +68,36 @@ while ex==0:
             tet[1]=". r r"
             tet[2]='. . .'
 
+        elif command.strip() == 'S':    #Activate 'S' tetramino
+            tet=[1,2,3]                   #Clear tet
+            tet[0]=". g g"                #Shape tet
+            tet[1]="g g ."
+            tet[2]='. . .'
+
+        elif command.strip() == 'J':    #Activate 'J' tetramino
+            tet=[1,2,3]                   #Clear tet
+            tet[0]="b . ."                #Shape tet
+            tet[1]="b b b"
+            tet[2]='. . .'
+
+        elif command.strip() == 'L':    #Activate 'L' tetramino
+            tet=[1,2,3]                   #Clear tet
+            tet[0]=". . o"                #Shape tet
+            tet[1]="o o o"
+            tet[2]='. . .'
+
+        elif command.strip() == 'T':    #Activate 'T' tetramino
+            tet=[1,2,3]                   #Clear tet
+            tet[0]=". m ."                #Shape tet
+            tet[1]="m m m"
+            tet[2]='. . .'
+
         elif command.strip() == 't':    #Display Active Tetramino
+            for i in range(0,len(tet)):
+                sys.stdout.write(tet[i])
+                sys.stdout.write("\n")
+
+         elif command.strip() == ')':    #Rotate 90 deg
             for i in range(0,len(tet)):
                 sys.stdout.write(tet[i])
                 sys.stdout.write("\n")

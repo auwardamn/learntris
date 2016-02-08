@@ -83,6 +83,25 @@ def rotate_tet(tet):
     rotated = zip(*tet[::-1])
     return list(rotated)
 
+def cap_tet(tet):
+    """Returns tet in capitalized form"""
+    for i in range(0,len(tet)):
+        tet[i]=map(str.upper,tet[i])
+    return tet
+
+def place_tet(mat, t):
+    """Places activated tet in matrix"""
+    if len(t) == 2:
+        start = 2
+    else:
+        start = 3
+    t=cap_tet(t)
+    for r in range(0,len(tet)): #For each row of tet
+        for i in range(0,len(tet[r])): #For each item in row of tet
+            mat[r][start] = tet[r][i]
+    return mat
+
+
 # Init Variables
 width = 10
 height = 22
@@ -138,11 +157,30 @@ while ex==0:                #Main Loop
         elif command.strip() == 't':    #Display Active Tetramino
             print_matrix(tet)
 
-        elif command.strip() == ')':
+        elif command.strip() == ')':    #Rotate Tetramino
             tet=(rotate_tet(tet))
 
-        elif command.strip() == ';':
+        elif command.strip() == ';':    #Print Gap Line
             print(' ')
+
+        elif command.strip() == 'P':    #Print Active Tetramino in Matrix
+            matrix = place_tet(matrix,tet)
+            print_matrix(matrix)
+
+        elif command.strip() == 'cap':    #capitalize tetramino
+            cap_tet(tet)
+            print_matrix(tet)
+
+
+        elif command.strip() == 'print':    #print items
+            print(matrix[0][0])
+            print(tet[0][0])
+
+        elif command.strip() == 'rep':    #rep items
+            rep = tet[0][0]
+            matrix[0][0] = rep
+            print(rep)
+            print(matrix)
 
         elif command.strip() == 'q':    # Quit Command
             ex=1                        # Terminate Program

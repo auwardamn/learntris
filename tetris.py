@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import sys
+
+def create_empty_matrix(m,n):
+    """Returns an mxn empty (.) matrix"""
+    row=[]
+    for i in range (0,m):
+        row.append('.') #make list of empty row items
+    matrix=[]
+    for i in range (0,n):
+        matrix.append(row) #make list of each row
+    return matrix           #output populated matrix
+
+def clear_tet(sqrNum):
+    """Clears Active Tet Shape"""
+    tet=[]  #clear tet
+    for i in range(sqrNum):
+            tet.append(i)   #create index locations for each tet row
+    return tet
+
+def clear_row(matrix, row_num):
+    """Returns Matrix with requested row cleared"""
+    width=len(matrix[1])
+    matrix[row_num]=[]
+    for i in range(0,width): # Do as many times as items per row
+        matrix[row_num].append('.')
+    return matrix
+
+def create_tet(type):
+    """Returns tetramino of defined type"""
+    
+    if type == 'I':    #Activate 'I' tetramino
+        tet = clear_tet(4)
+        tet[0]=['.','.','.','.']
+        tet[1]=['c','c','c','c']
+        tet[2]=['.','.','.','.']
+        tet[3]=['.','.','.','.']
+    
+    elif type == 'O':    #Activate 'O' tetramino
+        tet = clear_tet(2)
+        tet[0]=['y','y']
+        tet[1]=['y','y']
+
+    elif type == 'Z':    #Activate 'Z' tetramino
+            tet = clear_tet(3)
+            tet[0]=["r","r","."]
+            tet[1]=[".","r","r"]
+            tet[2]=[".",".","."]
+    
+    elif type == 'S':    #Activate 'S' tetramino
+            tet = clear_tet(3)
+            tet[0]=[".","g","g"]                
+            tet[1]=["g","g","."]
+            tet[2]=[".",".","."]
+
+    elif type == 'J':    #Activate 'J' tetramino
+            tet = clear_tet(3)
+            tet[2]=["b",".","."]
+            tet[2]=["b","b","b"]
+            tet[2]=[".",".","."]
+
+    elif type == 'L':    #Activate 'L' tetramino
+            tet = clear_tet(3)
+            tet[0]=[".","o","o"]
+            tet[2]=["o","o","o"]
+            tet[2]=[".",".","."]
+
+    elif type == 'T':    #Activate 'T' tetramino
+            tet = clear_tet(3)
+            tet[0]=". m ."                #Shape tet
+            tet[1]="m m m"
+            tet[2]='. . .'
+    return tet
+def print_matrix(matrix):
+    """prints provided matrix of seperate elements to the screen with " " seperation"""
+    for i in range(0,len(matrix)): #For Each row of the matrix
+        print(*matrix[i], sep=" ") #Print Each item of current row with " " seperation
+    
+
+# Init Variables
+width = 10
+height = 22
+score=0
+cleared=0
+ex=0
+matrix=create_empty_matrix(width,height)
+
+while ex==0:                #Main Loop
+
+    #Read Commands
+    input = sys.stdin.readline()                # Get Command Input
+    command_list = str.split(input)             # Split Entered Commands
+    for x in range(0,len(command_list)):        # "For Each Command Entered"
+        command = command_list[x]               # Set Current Command
+        
+        # Execute Possible Commands
+        if command.strip() == 'p':      # Print Current Matrix Status
+            print_matrix(matrix)
+
+        elif command.strip() == 'g':    # Input New Matrix Status
+            for i in range(0,height):   # For each row, as defined by the height
+               input=sys.stdin.readline() # Get input lines
+               item_list = str.split(input) # Split Lines into Items
+               matrix[i] = item_list # Put list of items into current row
+
+        elif command.strip() == 'c':    # Clear Matrix
+            matrix=create_empty_matrix(width,height)
+
+        elif command.strip() == '?s':   # Request Score Return
+            print(score)
+
+        elif command.strip() == '?n':   # Request Cleared Lines Counter
+            print(cleared)
+
+        elif command.strip() == 's':    # Check For Solid Lines
+            for i in range(0,height):
+                line = str(matrix[i])
+                if line.find('.') == -1:    #Clear if needed and add to scores
+                    matrix=clear_row(matrix, i)
+                    cleared=cleared+1
+                    score=score+100
+        
+        elif (command.strip() == 'I' or
+                command.strip() == 'O' or
+                command.strip() == 'Z' or
+                command.strip() == 'S' or
+                command.strip() == 'J' or
+                command.strip() == 'L' or
+                command.strip() == 'T'):
+            tet=create_tet(command.strip())
+
+        elif command.strip() == 't':    #Display Active Tetramino
+            print_matrix(tet)
+
+        elif command.strip() == ')':
+            print("Good")
+
+        elif command.strip() == 'q':    # Quit Command
+            ex=1                        # Terminate Program
+
+        else:                          # Invalid Input
+            print('Command Not Recognized')

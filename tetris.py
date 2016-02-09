@@ -4,13 +4,13 @@ import sys
 
 def create_empty_matrix(m,n):
     """Returns an mxn empty (.) matrix"""
-    row=[]
-    for i in range (0,m):
-        row.append('.') #make list of empty row items
     matrix=[]
     for i in range (0,n):
-        matrix.append(row) #make list of each row
-    return matrix           #output populated matrix
+        row=[]
+        for i in range (0,m):
+            row.append('.')
+        matrix.append(row)
+    return matrix
 
 def clear_tet(sqrNum):
     """Clears Active Tet Shape"""
@@ -91,14 +91,15 @@ def cap_tet(tet):
 
 def place_tet(mat, t):
     """Places activated tet in matrix"""
-    if len(t) == 2:
-        start = 2
-    else:
-        start = 3
     t=cap_tet(t)
     for r in range(0,len(tet)): #For each row of tet
+        if len(t) == 2:
+            start = 4
+        else:
+            start = 3
         for i in range(0,len(tet[r])): #For each item in row of tet
             mat[r][start] = tet[r][i]
+            start = start + 1
     return mat
 
 
@@ -178,8 +179,8 @@ while ex==0:                #Main Loop
 
         elif command.strip() == 'rep':    #rep items
             rep = tet[0][0]
-            matrix[0][0] = rep
             print(rep)
+            matrix[0][0] = rep
             print(matrix)
 
         elif command.strip() == 'q':    # Quit Command

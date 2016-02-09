@@ -137,13 +137,13 @@ while ex==0:                #Main Loop
         elif command.strip() == 'c':    # Clear Matrix
             matrix=create_empty_matrix(width,height)
 
-        elif command.strip() == '?':
-            x = x+1
+        elif command.strip() == '?':    #Request Counter
+            x = x+1                     #Skip to next command in command_list
             command = command_list[x]
-            if command.strip() == 's':    #Request Counter
+            if command.strip() == 's':  #If score request, print score
                 print(score)
 
-            elif command.strip() == 'n':
+            elif command.strip() == 'n':#If line clear request, print line clear number
                 print(cleared)
 
         elif command.strip() == 's':    # Check For Solid Lines

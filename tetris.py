@@ -102,6 +102,13 @@ def place_tet(mat, t):
             start = start + 1
     return mat
 
+def grab_command():
+    """Gets command input from user, splits command strings into command list"""
+    input = sys.stdin.readline()                # Get Command Input
+    command_list= []
+    for i in input:
+            command_list.append(i)
+    return command_list
 
 # Init Variables
 width = 10
@@ -114,11 +121,9 @@ matrix=create_empty_matrix(width,height)
 while ex==0:                #Main Loop
 
     #Read Commands
-    input = sys.stdin.readline()                # Get Command Input
-    command_list = str.split(input)             # Split Entered Commands
+    command_list = grab_command()
     for x in range(0,len(command_list)):        # "For Each Command Entered"
-        command = command_list[x]               # Set Current Command
-        
+        command = command_list[x]    # Set Current Command
         # Execute Possible Commands
         if command.strip() == 'p':      # Print Current Matrix Status
             print_matrix(matrix)
@@ -132,11 +137,14 @@ while ex==0:                #Main Loop
         elif command.strip() == 'c':    # Clear Matrix
             matrix=create_empty_matrix(width,height)
 
-        elif command.strip() == '?s':   # Request Score Return
-            print(score)
+        elif command.strip() == '?':
+            x = x+1
+            command = command_list[x]
+            if command.strip() == 's':    #Request Counter
+                print(score)
 
-        elif command.strip() == '?n':   # Request Cleared Lines Counter
-            print(cleared)
+            elif command.strip() == 'n':
+                print(cleared)
 
         elif command.strip() == 's':    # Check For Solid Lines
             for i in range(0,height):
@@ -168,23 +176,11 @@ while ex==0:                #Main Loop
             matrix = place_tet(matrix,tet)
             print_matrix(matrix)
 
-        elif command.strip() == 'cap':    #capitalize tetramino
-            cap_tet(tet)
-            print_matrix(tet)
-
-
-        elif command.strip() == 'print':    #print items
-            print(matrix[0][0])
-            print(tet[0][0])
-
-        elif command.strip() == 'rep':    #rep items
-            rep = tet[0][0]
-            print(rep)
-            matrix[0][0] = rep
-            print(matrix)
-
         elif command.strip() == 'q':    # Quit Command
             ex=1                        # Terminate Program
+
+        elif command == '\n' or 'n':
+            continue
 
         else:                          # Invalid Input
             print('Command Not Recognized')

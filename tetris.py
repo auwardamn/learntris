@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import sys
-from tet_functions import *
+import tetramino
 from mat_functions import *
 
 # Define Functions
 def grab_command():
     """Gets command input from user, splits command strings into command list"""
-    input = sys.stdin.readline()  # Get Command Input
+    input = raw_input()  # Get Command Input
     command_list = []
     for i in input:
         command_list.append(i)
@@ -62,49 +62,39 @@ while ex == 0:  # Main Loop
                     score = score + 100
 
         elif (command.strip() == 'I' or
-                      command.strip() == 'O' or
-                      command.strip() == 'Z' or
-                      command.strip() == 'S' or
-                      command.strip() == 'J' or
-                      command.strip() == 'L' or
-                      command.strip() == 'T'):
-            out = create_tet(command.strip())
-            tet = out[0]
-            tet_pos = out[1]
+              command.strip() == 'O' or
+              command.strip() == 'Z' or
+              command.strip() == 'S' or
+              command.strip() == 'J' or
+              command.strip() == 'L' or
+              command.strip() == 'T'):
+            active_tet = tetramino.tet(command.strip())
 
         elif command.strip() == 't':  # Display Active Tetramino
-            print_matrix(tet)
+            print_matrix(active_tet.shape)
 
         elif command.strip() == ')':  # Rotate Tetramino
-            tet = (rotate_tet(tet, rot))
+            active_tet.rotate()
 
         elif command.strip() == ';':  # Print Gap Line
             print(' ')
 
-        elif command.strip() == '<':
-            out =  move_tet(tet_pos, tet, matrix, '<', rot, type)
-            tet_pos = out[0]
-            #print(tet_pos)
-            matrix = out[1]
+        elif command.strip() == 'r':  # Print troubleshooting info
+            print(active_tet.start_y)
+            print(active_tet.start_x)
+            print(active_tet.end_y)
+            print(active_tet.end_x)
 
-        elif command.strip() == 'v':
-            out = move_tet(tet_pos, tet, matrix, 'v', rot, type)
-            tet_pos = out[0]
-            matrix = out[1]
-
-        elif command.strip() == '>':
-            out = move_tet(tet_pos, tet, matrix, '>', rot, type)
-            tet_pos = out[0]
-            #print(tet_pos)
-            matrix = out[1]
+        elif (command.strip() == '<' or
+              command.strip() == 'v' or
+              command.strip() == '>'):
+            matrix = active_tet.move(command.strip(),matrix)
 
         elif command.strip() == 'P':  # Print Active Tetramino in Matrix
-            if tet == []:
+            if active_tet.shape == []:
                 print("Tet not yet defined")
             else:
-                out = move_tet(tet_pos, tet, matrix, 'null', rot, type)
-                tet_pos = out[0]
-                matrix = out[1]
+                matrix = active_tet.place(matrix)
                 print_matrix(matrix)
 
         elif command.strip() == 'q':  # Quit Command

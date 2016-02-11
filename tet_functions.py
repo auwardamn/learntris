@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from check import *
+import sys
 
 def create_tet(type):
     """Returns tetramino of defined type"""
@@ -11,12 +13,14 @@ def create_tet(type):
         tet[3] = ['.', '.', '.', '.']
         tet_pos = [0,3]         # Init tet position
         rot = 0
+        type = 0
     elif type == 'O':  # Activate 'O' tetramino
         tet = clear_tet(2)
         tet[0] = ['y', 'y']
         tet[1] = ['y', 'y']
         tet_pos = [0,4]
         rot = 0
+        type = 1
     elif type == 'Z':  # Activate 'Z' tetramino
         tet = clear_tet(3)
         tet[0] = ["r", "r", "."]
@@ -24,6 +28,7 @@ def create_tet(type):
         tet[2] = [".", ".", "."]
         tet_pos = [0,3]
         rot = 0
+        type = 2
     elif type == 'S':  # Activate 'S' tetramino
         tet = clear_tet(3)
         tet[0] = [".", "g", "g"]
@@ -31,6 +36,7 @@ def create_tet(type):
         tet[2] = [".", ".", "."]
         tet_pos = [0,3]
         rot = 0
+        type = 3
     elif type == 'J':  # Activate 'J' tetramino
         tet = clear_tet(3)
         tet[0] = ["b", ".", "."]
@@ -38,6 +44,7 @@ def create_tet(type):
         tet[2] = [".", ".", "."]
         tet_pos = [0,3]
         rot = 0
+        type = 4
     elif type == 'L':  # Activate 'L' tetramino
         tet = clear_tet(3)
         tet[0] = [".", ".", "o"]
@@ -45,6 +52,7 @@ def create_tet(type):
         tet[2] = [".", ".", "."]
         tet_pos = [0,3]
         rot = 0
+        type = 5
     elif type == 'T':  # Activate 'T' tetramino
         tet = clear_tet(3)
         tet[0] = [".", "m", "."]
@@ -52,6 +60,7 @@ def create_tet(type):
         tet[2] = [".", ".", "."]
         tet_pos = [0,3]
         rot = 0
+        type = 6
     ret = [tet,tet_pos]
     return ret
 
@@ -62,17 +71,13 @@ def clear_tet(sqrNum):
         tet.append(i)  # create index locations for each tet row
     return tet
 
-def rotate_tet(tet):
+def rotate_tet(tet, rot):
     """returns tet matrix rotated 90 deg CW"""
     rotated = zip(*tet[::-1])
-    """if rot == 0:
-        rot = 1
-    elif rot == 1:
-        rot = 2
-    elif rot == 2:
-        rot = 3
+    if rot < 3:
+        rot += 1
     else:
-        rot = 0"""
+        rot = 0
     return list(rotated)
 
 def cap_tet(tet):
@@ -81,7 +86,7 @@ def cap_tet(tet):
         tet[i] = map(str.upper, tet[i])
     return tet
 
-def move_tet(tet_pos, tet, mat, inp):
+def move_tet(tet_pos, tet, mat, inp, rot, type):
     """Moves active tet in direction specified relative to current pos.
     Returns (tet_pos_new,matrix)"""
     start_y = tet_pos[0]
@@ -89,6 +94,7 @@ def move_tet(tet_pos, tet, mat, inp):
     end_y = tet_pos[0] + len(tet)
     end_x = tet_pos[1] + len(tet[0])
     if inp == '<':
+        out=check_space(type, rot)
         tet_pos[1] -= 1  # make new tet_pos one to the left
         if tet_pos[1] >= 0:
             for r in range(0,len(tet)): # For each row of tet

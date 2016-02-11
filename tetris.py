@@ -23,6 +23,7 @@ matrix = create_empty_matrix(width, height)
 tet_pos = [0, 0]  # tet_pos[0] = y, tet_pos[1]=x
 tet = []
 rot = 0
+type = 0
 
 while ex == 0:  # Main Loop
 
@@ -75,24 +76,24 @@ while ex == 0:  # Main Loop
             print_matrix(tet)
 
         elif command.strip() == ')':  # Rotate Tetramino
-            tet = (rotate_tet(tet))
+            tet = (rotate_tet(tet, rot))
 
         elif command.strip() == ';':  # Print Gap Line
             print(' ')
 
         elif command.strip() == '<':
-            out =  move_tet(tet_pos, tet, matrix, '<')
+            out =  move_tet(tet_pos, tet, matrix, '<', rot, type)
             tet_pos = out[0]
             #print(tet_pos)
             matrix = out[1]
 
         elif command.strip() == 'v':
-            out = move_tet(tet_pos, tet, matrix, 'v')
+            out = move_tet(tet_pos, tet, matrix, 'v', rot, type)
             tet_pos = out[0]
             matrix = out[1]
 
         elif command.strip() == '>':
-            out = move_tet(tet_pos, tet, matrix, '>')
+            out = move_tet(tet_pos, tet, matrix, '>', rot, type)
             tet_pos = out[0]
             #print(tet_pos)
             matrix = out[1]
@@ -101,7 +102,7 @@ while ex == 0:  # Main Loop
             if tet == []:
                 print("Tet not yet defined")
             else:
-                out = move_tet(tet_pos, tet, matrix, 'null')
+                out = move_tet(tet_pos, tet, matrix, 'null', rot, type)
                 tet_pos = out[0]
                 matrix = out[1]
                 print_matrix(matrix)

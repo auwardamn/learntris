@@ -1,5 +1,3 @@
-import sys
-
 def get_width(shape):
     """Returns width of given tet shape"""
     return len(shape)

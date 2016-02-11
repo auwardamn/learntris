@@ -68,33 +68,33 @@ while ex == 0:  # Main Loop
               command.strip() == 'J' or
               command.strip() == 'L' or
               command.strip() == 'T'):
-            active_tet = tetramino.tet(command.strip())
+            tet = tetramino.tet(command.strip())
 
         elif command.strip() == 't':  # Display Active Tetramino
-            print_matrix(active_tet.shape)
+            print_matrix(tet.shape)
 
         elif command.strip() == ')':  # Rotate Tetramino
-            active_tet.rotate()
+            tet.rotate()
 
         elif command.strip() == ';':  # Print Gap Line
             print(' ')
 
         elif command.strip() == 'r':  # Print troubleshooting info
-            print(active_tet.start_y)
-            print(active_tet.start_x)
-            print(active_tet.end_y)
-            print(active_tet.end_x)
+            print(tet.start_y)
+            print(tet.start_x)
+            print(tet.end_y)
+            print(tet.end_x)
 
         elif (command.strip() == '<' or
               command.strip() == 'v' or
               command.strip() == '>'):
-            matrix = active_tet.move(command.strip(),matrix)
+            matrix = tet.move(command.strip(),matrix)
 
         elif command.strip() == 'P':  # Print Active Tetramino in Matrix
-            if active_tet.shape == []:
+            if tet.shape == []:
                 print("Tet not yet defined")
             else:
-                matrix = active_tet.place(matrix)
+                matrix = tet.place(matrix)
                 print_matrix(matrix)
 
         elif command.strip() == 'q':  # Quit Command

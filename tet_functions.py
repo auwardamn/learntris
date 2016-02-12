@@ -1,68 +1,13 @@
-#!/usr/bin/env python
-from check import *
-import sys
+def get_width(shape):
+    """Returns width of given tet shape"""
+    return len(shape)
 
-def create_tet(type):
-    """Returns tetramino of defined type"""
-
-    if type == 'I':  # Activate 'I' tetramino
-        tet = clear_tet(4)
-        tet[0] = ['.', '.', '.', '.']
-        tet[1] = ['c', 'c', 'c', 'c']
-        tet[2] = ['.', '.', '.', '.']
-        tet[3] = ['.', '.', '.', '.']
-        tet_pos = [0,3]         # Init tet position
-        rot = 0
-        type = 0
-    elif type == 'O':  # Activate 'O' tetramino
-        tet = clear_tet(2)
-        tet[0] = ['y', 'y']
-        tet[1] = ['y', 'y']
-        tet_pos = [0,4]
-        rot = 0
-        type = 1
-    elif type == 'Z':  # Activate 'Z' tetramino
-        tet = clear_tet(3)
-        tet[0] = ["r", "r", "."]
-        tet[1] = [".", "r", "r"]
-        tet[2] = [".", ".", "."]
-        tet_pos = [0,3]
-        rot = 0
-        type = 2
-    elif type == 'S':  # Activate 'S' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", "g", "g"]
-        tet[1] = ["g", "g", "."]
-        tet[2] = [".", ".", "."]
-        tet_pos = [0,3]
-        rot = 0
-        type = 3
-    elif type == 'J':  # Activate 'J' tetramino
-        tet = clear_tet(3)
-        tet[0] = ["b", ".", "."]
-        tet[1] = ["b", "b", "b"]
-        tet[2] = [".", ".", "."]
-        tet_pos = [0,3]
-        rot = 0
-        type = 4
-    elif type == 'L':  # Activate 'L' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", ".", "o"]
-        tet[1] = ["o", "o", "o"]
-        tet[2] = [".", ".", "."]
-        tet_pos = [0,3]
-        rot = 0
-        type = 5
-    elif type == 'T':  # Activate 'T' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", "m", "."]
-        tet[1] = ["m", "m", "m"]
-        tet[2] = [".", ".", "."]
-        tet_pos = [0,3]
-        rot = 0
-        type = 6
-    ret = [tet,tet_pos]
-    return ret
+def end_cond(shape, start_x, start_y):
+    """Returns (end_x,end_y) based on given tet shape and tet pos"""
+    width = get_width(shape)
+    end_x = start_x + width
+    end_y = start_y + width
+    return end_x, end_y
 
 def clear_tet(sqrNum):
     """Clears Active Tet Shape"""
@@ -71,66 +16,187 @@ def clear_tet(sqrNum):
         tet.append(i)  # create index locations for each tet row
     return tet
 
-def rotate_tet(tet, rot):
-    """returns tet matrix rotated 90 deg CW"""
-    rotated = zip(*tet[::-1])
-    if rot < 3:
-        rot += 1
-    else:
-        rot = 0
-    return list(rotated)
+def create_shape(type):
+    if type == 'I':  # Activate 'I' tetramino
+        tet = clear_tet(4)
+        tet[0] = ['.', '.', '.', '.']
+        tet[1] = ['c', 'c', 'c', 'c']
+        tet[2] = ['.', '.', '.', '.']
+        tet[3] = ['.', '.', '.', '.']
+        start_x = 3         # Init tet position
+    elif type == 'O':  # Activate 'O' tetramino
+        tet = clear_tet(2)
+        tet[0] = ['y', 'y']
+        tet[1] = ['y', 'y']
+        start_x = 4
+    elif type == 'Z':  # Activate 'Z' tetramino
+        tet = clear_tet(3)
+        tet[0] = ["r", "r", "."]
+        tet[1] = [".", "r", "r"]
+        tet[2] = [".", ".", "."]
+        start_x = 3
+    elif type == 'S':  # Activate 'S' tetramino
+        tet = clear_tet(3)
+        tet[0] = [".", "g", "g"]
+        tet[1] = ["g", "g", "."]
+        tet[2] = [".", ".", "."]
+        start_x = 3
+    elif type == 'J':  # Activate 'J' tetramino
+        tet = clear_tet(3)
+        tet[0] = ["b", ".", "."]
+        tet[1] = ["b", "b", "b"]
+        tet[2] = [".", ".", "."]
+        start_x = 3
+    elif type == 'L':  # Activate 'L' tetramino
+        tet = clear_tet(3)
+        tet[0] = [".", ".", "o"]
+        tet[1] = ["o", "o", "o"]
+        tet[2] = [".", ".", "."]
+        start_x = 3
+    elif type == 'T':  # Activate 'T' tetramino
+        tet = clear_tet(3)
+        tet[0] = [".", "m", "."]
+        tet[1] = ["m", "m", "m"]
+        tet[2] = [".", ".", "."]
+        start_x = 3
+    return tet, start_x
 
-def cap_tet(tet):
-    """Returns tet in capitalized form"""
-    for i in range(0, len(tet)):
-        tet[i] = map(str.upper, tet[i])
-    return tet
-
-def move_tet(tet_pos, tet, mat, inp, rot, type):
-    """Moves active tet in direction specified relative to current pos.
-    Returns (tet_pos_new,matrix)"""
-    start_y = tet_pos[0]
-    start_x = tet_pos[1]
-    end_y = tet_pos[0] + len(tet)
-    end_x = tet_pos[1] + len(tet[0])
-    if inp == '<':
-        out=check_space(type, rot)
-        tet_pos[1] -= 1  # make new tet_pos one to the left
-        if tet_pos[1] >= 0:
-            for r in range(0,len(tet)): # For each row of tet
-                for i in range((end_x-1),len(mat[r])):
-                    mat[start_y+r][i] = '.' # put '.' in each row to the right of tet
-        else:
-            tet_pos[1] += 1
-
-    elif inp == '>':
-        tet_pos[1] += 1  # make new tet_pos one to the right
-        if tet_pos[1] <= len(mat[0])-len(tet):
-            for r in range(0,len(tet)): # For each row of tet
-                for i in range(0,start_x+1):
-                    mat[start_y+r][i] = '.' # put '.' in each row to the right of tet
-        else:
-            tet_pos[1] -= 1
-
-    elif inp == 'v':
-        tet_pos[0] += 1  # make new tes_pos one down
-
-    elif inp == 'null':
-        pass
-
-    mat = place_tet(mat, tet, tet_pos)  # Use place_tet function to output matrix with tet
-    ret = [tet_pos, mat]
-    return ret
-
-def place_tet(mat, tet, tet_pos):
-    """Returns matrix with activated tet in correct position"""
-    start_y = tet_pos[0]
-    start_x = tet_pos[1]
-    tet = cap_tet(tet)
-    for r in range(0, len(tet)):  # For each row of tet
-        for i in range(0, len(tet[r])):  # For each item of current row of tet
-            mat[start_y + r][start_x + i] = tet[r][i]
-    if start_y != 0:  # Check to see if tet is in initial y position
-        for i in range(0, len(tet[0])):  # for each item in first row of tet
-            mat[start_y - 1][i] = '.'  # put '.' in item spot of previous row
-    return mat
+def check_space(tet):
+    """returns number of spaces on all sides of active tet
+    output dictionary: (space_r,space_b,space_l,space_t)"""
+    if tet.type == 'I':       #type I
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 2
+        elif tet.rot == 1:
+            space_r = 1
+            space_l = 2
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 2
+            space_b = 1
+        elif tet.rot == 3:
+            space_r = 2
+            space_l = 1
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'O':     #type O
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'Z':     #type Z
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 1
+        elif tet.rot == 1:
+            space_r = 0
+            space_l = 1
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 0
+        elif tet.rot == 3:
+            space_r = 1
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'S':     #type S
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 1
+        elif tet.rot == 1:
+            space_r = 0
+            space_l = 1
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 0
+        elif tet.rot == 3:
+            space_r = 1
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'J':     #type J
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 1
+        elif tet.rot == 1:
+            space_r = 0
+            space_l = 1
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 0
+        elif tet.rot == 3:
+            space_r = 1
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'L':     #type L
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 1
+        elif tet.rot == 1:
+            space_r = 0
+            space_l = 1
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 0
+        elif tet.rot == 3:
+            space_r = 1
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    elif tet.type == 'T':     #type T
+        if tet.rot == 0:
+            space_r = 0
+            space_l = 0
+            space_t = 0
+            space_b = 1
+        elif tet.rot == 1:
+            space_r = 0
+            space_l = 1
+            space_t = 0
+            space_b = 0
+        elif tet.rot == 2:
+            space_r = 0
+            space_l = 0
+            space_t = 1
+            space_b = 0
+        elif tet.rot == 3:
+            space_r = 1
+            space_l = 0
+            space_t = 0
+            space_b = 0
+    tet.space_r= space_r
+    tet.space_b= space_b
+    tet.space_l= space_l
+    tet.space_t= space_t
+    return tet.space_r, tet.space_b, tet.space_l, tet.space_t

@@ -1,66 +1,4 @@
-def get_width(shape):
-    """Returns width of given tet shape"""
-    return len(shape)
-
-def end_cond(shape, start_x, start_y):
-    """Returns (end_x,end_y) based on given tet shape and tet pos"""
-    width = get_width(shape)
-    end_x = start_x + width
-    end_y = start_y + width
-    return end_x, end_y
-
-def clear_tet(sqrNum):
-    """Clears Active Tet Shape"""
-    tet = []  # clear tet
-    for i in range(sqrNum):
-        tet.append(i)  # create index locations for each tet row
-    return tet
-
-def create_shape(type):
-    if type == 'I':  # Activate 'I' tetramino
-        tet = clear_tet(4)
-        tet[0] = ['.', '.', '.', '.']
-        tet[1] = ['c', 'c', 'c', 'c']
-        tet[2] = ['.', '.', '.', '.']
-        tet[3] = ['.', '.', '.', '.']
-        start_x = 3         # Init tet position
-    elif type == 'O':  # Activate 'O' tetramino
-        tet = clear_tet(2)
-        tet[0] = ['y', 'y']
-        tet[1] = ['y', 'y']
-        start_x = 4
-    elif type == 'Z':  # Activate 'Z' tetramino
-        tet = clear_tet(3)
-        tet[0] = ["r", "r", "."]
-        tet[1] = [".", "r", "r"]
-        tet[2] = [".", ".", "."]
-        start_x = 3
-    elif type == 'S':  # Activate 'S' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", "g", "g"]
-        tet[1] = ["g", "g", "."]
-        tet[2] = [".", ".", "."]
-        start_x = 3
-    elif type == 'J':  # Activate 'J' tetramino
-        tet = clear_tet(3)
-        tet[0] = ["b", ".", "."]
-        tet[1] = ["b", "b", "b"]
-        tet[2] = [".", ".", "."]
-        start_x = 3
-    elif type == 'L':  # Activate 'L' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", ".", "o"]
-        tet[1] = ["o", "o", "o"]
-        tet[2] = [".", ".", "."]
-        start_x = 3
-    elif type == 'T':  # Activate 'T' tetramino
-        tet = clear_tet(3)
-        tet[0] = [".", "m", "."]
-        tet[1] = ["m", "m", "m"]
-        tet[2] = [".", ".", "."]
-        start_x = 3
-    return tet, start_x
-
+from tet_functions import *
 class tet(object):
     """
     A tetramino has the following properties:
@@ -71,7 +9,10 @@ class tet(object):
         start_y - indicates the starting top edge of the shape in the matrix (default=None)
         end_x - indicates the right edge of the shape in the matrix (depends on start_x and type)
         end_y - indicates the bottom edge of the shape in the matrix (depends on start_y and type)
-        space[] - list containing number of blank rows in shape matrix vs actual shape (r,b,l,t)
+        space_r- number of blank columns in shape matrix on right
+        space_l- number of blank columns in shape matrix on left
+        space_t- number of blank rows in shape matrix on top
+        space_b- number of blank rows in shape matrix on bottom
         rot - index of rotation: def=0, 1=90, 2=180, 3=270
         shape[] - list the forms the current visual representation of the tet (matrix form)
     """
@@ -85,7 +26,11 @@ class tet(object):
         self.start_x = start_x
         self.start_y = start_y
         self.rot = rot
-        self. end_x, self.end_y = end_cond(shape, start_x, start_y)
+        self.end_x, self.end_y = end_cond(shape, start_x, start_y)
+        self.space_r = None
+        self.space_l = None
+        self.space_t = None
+        self.space_b = None
 
     def rotate(self):
         """returns tet matrix rotated 90 deg CW"""
@@ -94,6 +39,7 @@ class tet(object):
                 self.rot += 1
         else:
                 self.rot = 0
+        check_space(self)
         return list(self.shape), self.rot
 
     def cap_tet(self):
@@ -111,6 +57,7 @@ class tet(object):
     def place(self, mat):
         """Returns matrix with activated tet in correct position"""
         tet = self.cap_tet()
+        check_space(self)
         for r in range(0, len(tet)):  # For each row of tet
             for i in range(0, len(tet[r])):  # For each item of current row of tet
                 mat[self.start_y + r][self.start_x + i] = tet[r][i]
@@ -122,6 +69,7 @@ class tet(object):
     def move(self, inp, mat):
         """Moves active tet in direction specified relative to current pos.
         Returns matrix, and updates self properties"""
+        check_space(self)
         if inp == '<':
             self.start_x -= 1  # make new tet_pos one to the left
             if self.start_x >= 0:
@@ -129,7 +77,11 @@ class tet(object):
                     for i in range((self.end_x-1),len(mat[r])):
                         mat[self.start_y+r][i] = '.' # put '.' in each row to the right of tet
             else:
-                self.start_x += 1
+               self.start_x += 1
+
+            #If there is space on left
+            if self.space_l != 0:
+                self.start_x -= 1
 
         elif inp == '>':
             self.start_x += 1  # make new tet_pos one to the right
@@ -138,7 +90,11 @@ class tet(object):
                     for i in range(0,self.start_x+1):
                         mat[self.start_y+r][i] = '.' # put '.' in each row to the right of tet
             else:
-                self.start_x -= 1
+               self.start_x -= 1
+
+            #If there is space on right
+            if self.space_r != 0:
+                self.start_x += 1
 
         elif inp == 'v':
             self.start_y += 1  # make new tes_pos one down

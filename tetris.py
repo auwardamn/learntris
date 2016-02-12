@@ -80,10 +80,10 @@ while ex == 0:  # Main Loop
             print(' ')
 
         elif command.strip() == 'r':  # Print troubleshooting info
-            print(tet.start_y)
-            print(tet.start_x)
-            print(tet.end_y)
-            print(tet.end_x)
+            print("space_r = ", tet.space_r)
+            print("space_l = ", tet.space_l)
+            print("space_t = ", tet.space_t)
+            print("space_b = ", tet.space_b)
 
         elif (command.strip() == '<' or
               command.strip() == 'v' or
